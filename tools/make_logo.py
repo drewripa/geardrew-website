@@ -84,7 +84,9 @@ def build():
     return occ, pid, col
 
 
-def render(occ, pid, col, ppv, view=(-0.34, 1.0, -0.3)):
+def render(occ, pid, col, ppv, view=(-0.34, 1.0, -0.3), outline=2):
+    X, Y, Z = occ.shape
+    OX, OZ = X // 2, Z // 2
     f = np.array(view, float)
     f /= np.linalg.norm(f)
     right = np.cross(f, [0, 0, 1.0])
@@ -144,7 +146,7 @@ def render(occ, pid, col, ppv, view=(-0.34, 1.0, -0.3)):
     # surface steps back.
     shape = ids != 0
     grown = shape.copy()
-    for _ in range(2):
+    for _ in range(outline):
         grown = grown | np.roll(grown, 1, 0) | np.roll(grown, -1, 0) | np.roll(grown, 1, 1) | np.roll(grown, -1, 1)
     line = grown & ~shape
     for dy, dx in ((0, 1), (0, -1), (1, 0), (-1, 0)):
