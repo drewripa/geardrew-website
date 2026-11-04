@@ -13,7 +13,8 @@ import random
 import numpy as np
 from PIL import Image
 
-R = 20                      # radius of the shared circle (gear body and D bowl), in voxels
+R = 20                      # radius of the gear body, in voxels
+TIP = R + 4.5               # gear tooth tips; the D's bowl is this big too
 X, Y, Z = 58, 10, 58        # grid size; y is depth (camera looks along +y)
 OX, OZ = 29, 29             # circle centre in the grid
 OUTLINE = (14, 11, 18)
@@ -37,7 +38,7 @@ def build():
 
             if wx < 0:
                 # Half gear: thick rim with teeth, thin web with two holes, thick hub round the axle.
-                tooth = R - 0.5 < r <= R + 4.5 and math.cos(10 * (ang - math.pi)) > 0.25 + 0.04 * (r - R)
+                tooth = R - 0.5 < r <= TIP and math.cos(10 * (ang - math.pi)) > 0.25 + 0.04 * (r - R)
                 hole = any(math.hypot(wx - 13 * math.cos(a), wz - 13 * math.sin(a)) < 3.6
                            for a in (math.radians(135), math.radians(225)))
                 if r < 5.5 or hole:
@@ -58,16 +59,16 @@ def build():
                     occ[x, y, z], pid[x, y, z], col[x, y, z] = True, part, base
             else:
                 # Letter D: two upright planks for the stem, horizontal planks for the bowl.
-                if r > R + 0.5:
+                if r > TIP:
                     continue
-                if wx >= 6 and r <= R - 6.5:
+                if wx >= 6 and r <= TIP - 7.5:
                     continue                             # the D's counter
                 if wx < 6:
                     plank = 10 + int(wx // 3)
                     along, across = wz, wx % 3
                 else:
-                    plank = 20 + int((wz + R) // 4)
-                    along, across = wx, (wz + R) % 4
+                    plank = 20 + int((wz + TIP) // 4)
+                    along, across = wx, (wz + TIP) % 4
                 if plank not in plank_tone:
                     plank_tone[plank] = rng.uniform(0.85, 1.12)
                     plank_front[plank] = rng.choice((1, 1, 2))   # slightly uneven planks
@@ -93,7 +94,7 @@ def render(occ, pid, col, ppv, view=(-0.34, 1.0, -0.3)):
     centre = np.array([OX, Y / 2, OZ])
     pts = np.argwhere(occ) + 0.5 - centre
     s, t = pts @ right, pts @ up
-    pad = 3 / ppv
+    pad = 4 / ppv
     s0, s1, t0, t1 = s.min() - 1 - pad, s.max() + 1 + pad, t.min() - 1 - pad, t.max() + 1 + pad
     w, h = int((s1 - s0) * ppv), int((t1 - t0) * ppv)
 
@@ -139,16 +140,21 @@ def render(occ, pid, col, ppv, view=(-0.34, 1.0, -0.3)):
     img[hit, 3] = 255
     ids = np.where(hit, pid[hit_idx[..., 0], hit_idx[..., 1], hit_idx[..., 2]], 0)
 
-    # Black outlines: round the silhouette, between parts, and where a surface steps back.
-    line = np.zeros((h, w), bool)
-    for dy, dx in ((0, 1), (0, -1), (1, 0), (-1, 0), (1, 1), (-1, -1), (1, -1), (-1, 1)):
+    # Black outlines, two pixels thick: round the silhouette, between parts, and where a surface
+    # steps back.
+    shape = ids != 0
+    grown = shape.copy()
+    for _ in range(2):
+        grown = grown | np.roll(grown, 1, 0) | np.roll(grown, -1, 0) | np.roll(grown, 1, 1) | np.roll(grown, -1, 1)
+    line = grown & ~shape
+    for dy, dx in ((0, 1), (0, -1), (1, 0), (-1, 0)):
         nid = np.roll(ids, (dy, dx), (0, 1))
         nd = np.roll(depth, (dy, dx), (0, 1))
-        line |= (ids == 0) & (nid != 0)
-        if abs(dy) + abs(dx) == 1:
-            other = (ids != 0) & (nid != 0)
-            line |= other & (nid != ids) & ((nd < depth - 0.6) | ((abs(nd - depth) <= 0.6) & (nid < ids)))
-            line |= other & (nid == ids) & (nd < depth - 3.0)
+        both = shape & (nid != 0)
+        line |= both & (nid != ids)                       # both sides of a seam: 2 px
+        line |= both & (nid == ids) & (nd < depth - 3.0)
+        step = both & (nid == ids) & (nd > depth + 3.0)   # and the near side of a step
+        line |= step
     img[line] = (*OUTLINE, 255)
     return Image.fromarray(np.clip(img, 0, 255).astype(np.uint8), "RGBA")
 
