@@ -140,8 +140,8 @@ def render(occ, pid, col, ppv, view=(-0.34, 1.0, -0.3)):
     img[hit, 3] = 255
     ids = np.where(hit, pid[hit_idx[..., 0], hit_idx[..., 1], hit_idx[..., 2]], 0)
 
-    # Black outlines, two pixels thick: round the silhouette, between parts, and where a surface
-    # steps back.
+    # Black outlines: two pixels round the silhouette, one pixel between parts and where a
+    # surface steps back.
     shape = ids != 0
     grown = shape.copy()
     for _ in range(2):
@@ -151,10 +151,8 @@ def render(occ, pid, col, ppv, view=(-0.34, 1.0, -0.3)):
         nid = np.roll(ids, (dy, dx), (0, 1))
         nd = np.roll(depth, (dy, dx), (0, 1))
         both = shape & (nid != 0)
-        line |= both & (nid != ids)                       # both sides of a seam: 2 px
+        line |= both & (nid != ids) & ((nd < depth - 0.6) | ((abs(nd - depth) <= 0.6) & (nid < ids)))
         line |= both & (nid == ids) & (nd < depth - 3.0)
-        step = both & (nid == ids) & (nd > depth + 3.0)   # and the near side of a step
-        line |= step
     img[line] = (*OUTLINE, 255)
     return Image.fromarray(np.clip(img, 0, 255).astype(np.uint8), "RGBA")
 
