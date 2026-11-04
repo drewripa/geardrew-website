@@ -1,9 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="-3.5 0 64 64">
-  <title>GearDrew</title>
-  <!-- Left half: gear with teeth; right half: the bowl of a D. The D's stem joins them. -->
-  <path fill="#f4a53a" fill-rule="evenodd" d="
-    M32,11 A21,21 0 0 0 32,53 A21,21 0 0 0 32,11 Z
-    M28,22 A10,10 0 0 0 28,42 Z
-    M36,20 A12,12 0 0 1 36,44 Z"/>
-  <path fill="#f4a53a" d="M27.84,12.44 L24.52,5.02 A28,28 0 0 1 18.64,7.39 L21.40,15.04 Z M17.61,18.11 L10.71,13.82 A28,28 0 0 1 7.16,19.07 L13.73,23.87 Z M12.30,28.53 L4.18,28.83 A28,28 0 0 1 4.18,35.17 L12.30,35.47 Z M13.73,40.13 L7.16,44.93 A28,28 0 0 1 10.71,50.18 L17.61,45.89 Z M21.40,48.96 L18.64,56.61 A28,28 0 0 1 24.52,58.98 L27.84,51.56 Z"/>
-</svg>

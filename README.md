@@ -10,6 +10,7 @@ Plain static HTML and CSS with no build step, hosted on GitHub Pages.
   Use that URL as the privacy policy link in Google Play Console.
 - `downloads.html`: press kit and other files. Put files in `files/` and add a line to the list.
 - `assets/`: CSS, the Geardrew Pixel font (Chunky style, from `D:\VibeGames\.tools\fonts`), logo, game art
+- `tools/make_logo.py`: renders the voxel logo (`assets/img/logo.png`, `favicon.png`); needs `pip install numpy pillow`
 - `404.html`: uses absolute `/geardrew-site/` paths; change them if the repo is renamed or a custom domain is added.
 - `.nojekyll`: serve the files as they are.
 

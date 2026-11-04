@@ -62,7 +62,7 @@ section + section { border-top: 1px solid var(--line); }
   font-family: var(--pixel); font-size: 1.4rem;
   color: var(--text); text-decoration: none;
 }
-.logo img { width: 30px; height: 30px; }
+.logo img { width: auto; height: 36px; }
 .logo span b { color: var(--accent); font-weight: normal; }
 nav ul { list-style: none; display: flex; gap: 4px 18px; margin: 0; padding: 0; flex-wrap: wrap; }
 nav a { color: var(--muted); text-decoration: none; font-size: 0.95rem; }
@@ -147,4 +147,4 @@ nav a:hover, nav a[aria-current="page"] { color: var(--text); }
 .card .art { text-decoration: none; }
 .game-hero > * { min-width: 0; }
 .game-hero img { height: auto; }
-.hero-logo { width: 120px; height: 120px; margin: 0 auto 20px; }
+.hero-logo { width: 160px; height: auto; margin: 0 auto 20px; }
