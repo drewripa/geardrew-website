@@ -147,3 +147,4 @@ nav a:hover, nav a[aria-current="page"] { color: var(--text); }
 .card .art { text-decoration: none; }
 .game-hero > * { min-width: 0; }
 .game-hero img { height: auto; }
+.hero-logo { width: 120px; height: 120px; margin: 0 auto 20px; }
