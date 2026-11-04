@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" shape-rendering="crispEdges" fill="#f4a53a">
+  <!-- pixel gear: teeth, ring, hub -->
+  <rect x="13" y="1" width="6" height="5"/><rect x="13" y="26" width="6" height="5"/>
+  <rect x="1" y="13" width="5" height="6"/><rect x="26" y="13" width="5" height="6"/>
+  <rect x="4" y="4" width="5" height="5"/><rect x="23" y="4" width="5" height="5"/>
+  <rect x="4" y="23" width="5" height="5"/><rect x="23" y="23" width="5" height="5"/>
+  <path fill-rule="evenodd" d="M10 5h12v2h3v3h2v12h-2v3h-3v2H10v-2H7v-3H5V10h2V7h3zM13 11h6v2h1v6h-1v2h-6v-2h-1v-6h1z"/>
+</svg>
