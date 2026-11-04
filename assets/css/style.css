@@ -69,7 +69,13 @@ nav a { color: var(--muted); text-decoration: none; font-size: 0.95rem; }
 nav a:hover, nav a[aria-current="page"] { color: var(--text); }
 
 /* Hero */
-.hero { padding: 88px 0 72px; text-align: center; }
+.hero {
+  padding: 88px 0 72px; text-align: center;
+  /* Maple Hollow from Silly Delivery, dimmed into the page background so the logo stays the focus */
+  background:
+    linear-gradient(rgba(20, 18, 28, 0.74), rgba(20, 18, 28, 0.86) 70%, var(--bg)),
+    url("../img/hero-town.jpg") center / cover no-repeat;
+}
 .hero p { font-size: 1.15rem; color: var(--muted); max-width: 620px; margin: 0 auto 28px; }
 .btn {
   display: inline-block; padding: 10px 20px; border-radius: 8px;
