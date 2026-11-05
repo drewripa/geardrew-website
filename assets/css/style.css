@@ -123,8 +123,11 @@ nav a:hover, nav a[aria-current="page"] { color: var(--text); }
 .facts { display: grid; grid-template-columns: max-content 1fr; gap: 6px 20px; margin: 0; }
 .facts dt { color: var(--muted); }
 .facts dd { margin: 0; }
-.shots { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; }
+.shots { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(320px, 100%), 1fr)); gap: 16px; }
 .shots img { border-radius: 8px; border: 1px solid var(--line); }
+.shots figure { margin: 0; }
+.shots img { display: block; width: 100%; height: auto; }
+.shots figcaption { color: var(--muted); font-size: 0.85rem; margin-top: 6px; }
 
 /* Prose pages (privacy, downloads) */
 .prose { max-width: 760px; }
