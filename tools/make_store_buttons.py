@@ -20,8 +20,10 @@ GAP = 6                 # between the arrow and the text
 ARROW = 16              # play arrow height
 SLAB = range(3, 8)      # slab depth (y; the camera looks along +y, so smaller y is nearer)
 RAISED = range(0, 3)    # arrow and letters stand out of the slab's face
+BORDER = 1              # black border round the arrow and letters, in voxels
+BORDER_COLOR = (22, 16, 12)
 BUTTONS = {
-    "demo": ("DEMO", (247, 196, 46), (60, 38, 10)),
+    "demo": ("DEMO", (247, 196, 46), (255, 250, 232)),
     "buy": ("BUY", (88, 186, 82), (250, 250, 240)),
 }
 
@@ -69,6 +71,16 @@ def build(word, face, ink, width):
     def stamp(mask, left, part):
         h = mask.shape[0]
         z_top = (Z + h) // 2                     # mask row 0 is the top
+        # a one-voxel black border round the shape, just under it, so the letters read at a glance
+        ring = np.pad(mask, BORDER)
+        for _ in range(BORDER):
+            ring = ring | np.roll(ring, 1, 0) | np.roll(ring, -1, 0) | np.roll(ring, 1, 1) | np.roll(ring, -1, 1)
+        for r in range(ring.shape[0]):
+            for c in range(ring.shape[1]):
+                if ring[r, c]:
+                    x, z = left + c - BORDER, z_top - 1 - r + BORDER
+                    for y in range(RAISED.start + 1, RAISED.stop):
+                        occ[x, y, z], pid[x, y, z], col[x, y, z] = True, 4, BORDER_COLOR
         for r in range(h):
             for c in range(mask.shape[1]):
                 if mask[r, c]:
