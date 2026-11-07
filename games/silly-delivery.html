@@ -37,6 +37,11 @@
             <span class="tag status">In development</span>
             <span class="tag">Android</span><span class="tag">PC</span><span class="tag">Mac</span>
           </div>
+          <div class="btn-row store-row">
+            <a class="btn" href="#" data-store="demo">Free demo on Google Play</a>
+            <a class="btn ghost" href="#" data-store="full">Get the full game</a>
+          </div>
+          <p class="soon-note" hidden>Coming soon to Google Play!</p>
         </div>
       </div>
     </section>
@@ -75,6 +80,21 @@
               alt="The D-Livery depot: pick today's vehicle from the fleet" width="1920" height="1080" loading="lazy"></a>
             <figcaption>The D-Livery depot: pick today's vehicle from the fleet</figcaption>
           </figure>
+          <figure>
+            <a href="../assets/img/games/silly-delivery/7-van.png"><img src="../assets/img/games/silly-delivery/7-van.png"
+              alt="Driving the D-Livery van down Elm St" width="1920" height="1080" loading="lazy"></a>
+            <figcaption>Driving the D-Livery van down Elm St</figcaption>
+          </figure>
+          <figure>
+            <a href="../assets/img/games/silly-delivery/8-rig.png"><img src="../assets/img/games/silly-delivery/8-rig.png"
+              alt="A big rig hauling moving containers down the highway" width="1920" height="1080" loading="lazy"></a>
+            <figcaption>A big rig hauling moving containers down the highway</figcaption>
+          </figure>
+          <figure>
+            <a href="../assets/img/games/silly-delivery/9-pelican-bay.png"><img src="../assets/img/games/silly-delivery/9-pelican-bay.png"
+              alt="Surfboards for Pelican Bay, a sunny beach town by the sea" width="1920" height="1080" loading="lazy"></a>
+            <figcaption>Surfboards for Pelican Bay, a sunny beach town by the sea</figcaption>
+          </figure>
         </div>
       </div>
     </section>
@@ -111,8 +131,11 @@
         </dl>
 
         <h2>Get it</h2>
-        <!-- TODO: add the Google Play link when the store page is live -->
-        <p class="muted">Coming soon to Google Play.</p>
+        <div class="btn-row store-row left">
+          <a class="btn" href="#" data-store="demo">Free demo on Google Play</a>
+          <a class="btn ghost" href="#" data-store="full">Get the full game</a>
+        </div>
+        <p class="soon-note" hidden>Coming soon to Google Play!</p>
         <p><a href="../privacy/silly-delivery/">Privacy policy for Silly Delivery</a></p>
       </div>
     </section>
@@ -124,6 +147,33 @@
       <span><a href="../privacy.html">Privacy</a> · <a href="../downloads.html">Downloads</a></span>
     </div>
   </footer>
+  <script>
+    // The Google Play links. Paste each store page's URL here when it goes live, e.g.
+    //   demo: https://play.google.com/store/apps/details?id=com.geardrew.vibe.sillydelivery.demo
+    //   full: https://play.google.com/store/apps/details?id=com.geardrew.vibe.sillydelivery.full
+    // While a URL is empty its buttons just say "Coming soon" (nothing opens).
+    const STORE_URLS = {
+      demo: "",
+      full: ""
+    };
+    document.querySelectorAll("[data-store]").forEach((btn) => {
+      const url = STORE_URLS[btn.dataset.store];
+      if (url) {
+        btn.href = url;
+        btn.target = "_blank";
+        btn.rel = "noopener";
+        return;
+      }
+      btn.addEventListener("click", (e) => {
+        e.preventDefault();
+        const note = btn.closest(".btn-row").nextElementSibling;
+        note.hidden = false;
+        note.classList.remove("pop");
+        void note.offsetWidth;                 // (restart the little pop each click)
+        note.classList.add("pop");
+      });
+    });
+  </script>
   <script src="../assets/js/gallery.js"></script>
 </body>
 </html>
