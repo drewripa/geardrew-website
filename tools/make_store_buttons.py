@@ -97,9 +97,10 @@ def build(word, face, ink, width):
 def main():
     width = max(arrow_mask(ARROW).shape[1] + GAP + text_mask(w).shape[1] for w, _, _ in BUTTONS.values()) + 2 * PAD
     for name, (word, face, ink) in BUTTONS.items():
-        img = render(*build(word, face, ink, width), ppv=2.07, view=(-0.2, 1.0, -0.22), outline=1)
+        # rendered at 2x the final size, then scaled down smoothly: anti-aliased edges, no stair steps
+        img = render(*build(word, face, ink, width), ppv=8.28, view=(-0.2, 1.0, -0.22), outline=4)
         img = img.crop(img.getbbox())
-        img = img.resize((img.width * 2, img.height * 2), Image.NEAREST)
+        img = img.resize((img.width // 2, img.height // 2), Image.LANCZOS)
         img.save(os.path.join(OUT, f"btn-{name}.png"))
         print(name, img.size)
 

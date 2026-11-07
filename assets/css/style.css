@@ -88,7 +88,6 @@ nav a:hover, nav a[aria-current="page"] { color: var(--text); }
 .btn-row { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
 .store-row { justify-content: flex-start; margin-top: 18px; gap: 14px; }
 .store-btn { display: inline-block; line-height: 0; border-radius: 6px; transition: transform 0.12s; }
-.store-btn img { image-rendering: pixelated; }
 .store-btn:hover { transform: translateY(-2px); }
 .store-btn:active { transform: translateY(1px); }
 .store-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }

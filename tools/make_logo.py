@@ -124,10 +124,27 @@ def render(occ, pid, col, ppv, view=(-0.34, 1.0, -0.3), outline=2):
                 hit[rows, cols] = True
                 hit_idx[rows, cols] = c
                 depth[rows, cols] = d
-                # Entry face: the voxel boundary the ray crossed most recently.
-                frac = origin[rows, cols] + d * f - c
-                since = np.where(f > 0, frac, 1 - frac) / np.maximum(abs(f), 1e-9)
-                face[rows, cols] = np.argmin(since, axis=1)
+                # Entry face: the voxel boundary the ray crossed last, from the exact distance at which
+                # it crossed each of the cell's entry planes (not the stepped hit point, which is off by
+                # up to a step and flips faces on wide flat surfaces).
+                o = origin[rows, cols]
+                step_back = np.where(f > 0, -1, 1)
+                for _ in range(3):
+                    plane = np.where(f > 0, c, c + 1)
+                    cross = (plane - o) / np.where(abs(f) > 1e-9, f, 1e-9)
+                    ax = np.argmax(cross, axis=1)
+                    # a ray that crossed a cell edge within one step may have skipped the cell it really
+                    # entered: if the cell back across the entry face is solid too, the hit is there
+                    prev_c = c.copy()
+                    prev_c[np.arange(len(c)), ax] += step_back[ax]
+                    ok = ((prev_c >= 0) & (prev_c < [X, Y, Z])).all(-1)
+                    back = np.zeros(len(c), bool)
+                    back[ok] = occ[prev_c[ok, 0], prev_c[ok, 1], prev_c[ok, 2]]
+                    if not back.any():
+                        break
+                    c = np.where(back[:, None], prev_c, c)
+                hit_idx[rows, cols] = c
+                face[rows, cols] = ax
 
     # A lone pixel whose face disagrees with all four neighbours is a grazing-ray miss: take theirs.
     nbrs = [np.roll(face, sh, ax) for sh, ax in ((1, 0), (-1, 0), (1, 1), (-1, 1))]
